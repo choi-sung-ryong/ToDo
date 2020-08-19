@@ -1,35 +1,54 @@
-import React from 'react';
-import { StyleSheet, Text, View, StatusBar, TextInput, Dimensions, Platform } from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  TextInput,
+  Dimensions,
+  Platform,
+} from "react-native";
 
 const { height, width } = Dimensions.get("window");
 
 export default class App extends React.Component {
+  state = {
+    newToDo: "",
+  };
   render() {
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <Text style={styles.title}>To Do Test App</Text>
         <View style={styles.card}>
-          <TextInput style={styles.input} placeholder={"New To Do"} />
+          <TextInput
+            style={styles.input}
+            placeholder={"New To Do"}
+            value={newToDo}
+            onChangeText={this._contolNewToDo}
+          />
         </View>
       </View>
-
     );
   }
+
+  _controlNewToDo = (text) => {
+    this.setState({ NewToDo: text });
+  };
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F23657',
-    alignItems: 'center'
+    backgroundColor: "#F23657",
+    alignItems: "center",
   },
   title: {
     color: "white",
     fontSize: 30,
     marginTop: 20,
     fontWeight: "200",
-    marginBottom: 30
+    marginBottom: 30,
   },
   card: {
     backgroundColor: "white",
@@ -44,13 +63,19 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         shadowOffset: {
           height: -1,
-          width: 0
-        }
+          width: 0,
+        },
       },
       android: {
-        elevation: 3
-      }
-    })
+        elevation: 3,
+      },
+    }),
+  },
 
-  }
+  input: {
+    padding: 5,
+    borderBottomColor: "#bbb",
+    borderBottomWidth: 1,
+    fontSize: 12,
+  },
 });
