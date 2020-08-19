@@ -7,34 +7,54 @@ import {
   TextInput,
   Dimensions,
   Platform,
+  ScrollView,
 } from "react-native";
+import ToDo from "./ToDo";
+import {AppLoading} from "expo";
 
 const { height, width } = Dimensions.get("window");
 
 export default class App extends React.Component {
   state = {
     newToDo: "",
+    loadedToDos : false
   };
+  componentDidMount = () =>{
+    this._loadToDos();
+  }
   render() {
+    const { newToDo, loadedToDos } = this.state;
+    if(!loadedToDos){
+      return <AppLoading/>
+    }
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <Text style={styles.title}>To Do Test App</Text>
+        <Text style={styles.title}>To Do Test  App</Text>
         <View style={styles.card}>
           <TextInput
             style={styles.input}
             placeholder={"New To Do"}
-            value={newToDo}
-            onChangeText={this._contolNewToDo}
+            onChangeText={this._controlNewToDo}
+            placeholderTextColor={"#999"}
+            returnKeyType={"done"} 
+            autoCorrect={false}
           />
+          <ScrollView contentContainerStyle={styles.toDos}>
+            <ToDo text={"Hello I'm a TODO" } />
+          </ScrollView>
         </View>
       </View>
     );
   }
 
   _controlNewToDo = (text) => {
-    this.setState({ NewToDo: text });
+    this.setState({ newToDo: text });
   };
+
+  _loadToDos =() => {
+    this.setState({loadedToDos:true});
+  }
 }
 
 const styles = StyleSheet.create({
