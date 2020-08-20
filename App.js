@@ -11,19 +11,23 @@ import {
 } from "react-native";
 import ToDo from "./ToDo";
 import {AppLoading} from "expo";
+import uuidv1 from "uuid/v1";
+
 
 const { height, width } = Dimensions.get("window");
 
 export default class App extends React.Component {
   state = {
     newToDo: "",
-    loadedToDos : false
+    loadedToDos : false,
+    toDos: {}
   };
   componentDidMount = () =>{
     this._loadToDos();
   }
   render() {
-    const { newToDo, loadedToDos } = this.state;
+    const { newToDo, loadedToDos,toDos } = this.state;
+    console.log(toDos);
     if(!loadedToDos){
       return <AppLoading/>
     }
@@ -35,25 +39,54 @@ export default class App extends React.Component {
           <TextInput
             style={styles.input}
             placeholder={"New To Do"}
+            value={newToDo}
             onChangeText={this._controlNewToDo}
             placeholderTextColor={"#999"}
             returnKeyType={"done"} 
             autoCorrect={false}
+            onSubmitEditing={this._addToDo}
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            <ToDo text={"Hello I'm a TODO" } />
+            {Object.values(toDos).map(toDo => <ToDo key={toDo.id} {...toDo} /> )  }
           </ScrollView>
         </View>
       </View>
-    );
+    );  
   }
 
   _controlNewToDo = (text) => {
     this.setState({ newToDo: text });
   };
 
-  _loadToDos =() => {
-    this.setState({loadedToDos:true});
+  _loadToDos =() => { 
+    this.setState({loadedToDos:true});   
+  }
+  _addToDo = () =>{  
+    const {newToDo} = this.state;
+    if (newToDo !== ""){
+        this.setState( prevState => {
+          const ID = uuidv1();
+          const newToDoObject = {
+            [ID]: {
+              id: ID,
+              isCompleted: false,
+              text: newToDo,
+              createAt: Date.now()
+            }
+          }
+          const newState = {
+            ...prevState,
+            newToDo: "",
+            toDos: {
+              ...prevState.toDos,
+              ...newToDoObject
+            }
+          }
+          return {...newState} ;
+        }
+      );
+      
+    } 
   }
 }
 
@@ -96,6 +129,6 @@ const styles = StyleSheet.create({
     padding: 5,
     borderBottomColor: "#bbb",
     borderBottomWidth: 1,
-    fontSize: 12,
+    fontSize: 20,
   },
 });

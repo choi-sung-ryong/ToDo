@@ -7,14 +7,21 @@ import {
   Dimensions,
   TextInput
 } from "react-native";
+import PropTypes from "prop-types";
 
 const { width, height } = Dimensions.get("window");
 
 export default class ToDo extends Component {
-  state = {
-    isEditing: false,
-    isCompleted: false,
-    toDoValue:""
+  constructor(props){
+    super(props);
+    this.state = {
+      isEditing: false,
+      toDoValue:props.text
+    };
+  }
+  static propTypes = {
+    text : PropTypes.string.isRequired,
+    isCompleted : PropTypes.bool.isRequired
   };
 
   render() {
@@ -91,8 +98,7 @@ export default class ToDo extends Component {
   };
 
   _startEditing=() =>{
-    const {text} = this.props;
-    this.setState({isEditing:true, toDoValue:text});
+    this.setState({isEditing:true});
   }
 
   _FinishEditing=() =>{
@@ -106,7 +112,7 @@ export default class ToDo extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: width - 10,
+    width: width - 50,
     borderBottomColor: "#bbb",
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: "row",
@@ -130,8 +136,8 @@ const styles = StyleSheet.create({
   },
   Text: {
     fontWeight: "600",
-    fontSize: 10,
-    marginVertical: 10,
+    fontSize: 20,
+    marginVertical: 15,
   },
   completedText: {
     color: "#bbb",
@@ -152,7 +158,7 @@ const styles = StyleSheet.create({
   },  
   actionText:{
     fontWeight: "600",
-    fontSize: 10,
+    fontSize: 20,
     marginVertical: 10,
     marginLeft: 10
   },
